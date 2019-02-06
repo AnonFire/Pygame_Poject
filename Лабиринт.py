@@ -252,14 +252,14 @@ def records():
     screen.fill((0, 0, 0))
     tabl = open('tabl_records.txt').readlines()
     font = pygame.font.Font(None, 68)
-    x = 0
+    j = 0
     for i in tabl:
         text = font.render(i, 1, (255, 215, 0))
         screen.blit(text, (x_0 + i * 50, y_0 + i * 50))
         x_0 = 740 - text.get_width() / 2
-        y_0 = 450 - text.get_height() / 2 * len(tabl)
-        pygame.draw.rect(screen, (255, 0, 0), (x_0, y_0 + x * 60, 50, 50))
-        x += 1
+        y_0 = 450 - (text.get_height() + 10) / 2 * len(tabl)
+        pygame.draw.rect(screen, (255, 0, 0), (x_0, y_0 + j * 60, 50, 50))
+        j += 1
     pygame.display.flip()
     pygame.display.update()
     exit = load_image('exit.png')
@@ -324,6 +324,13 @@ def menu():
                         pass
         pygame.display.flip()
         pygame.display.update()
+
+
+def f(n):
+    S = 0
+    for i in range(n + 1):
+        S += 1.5 ** i * 75
+    return int(S)
 
 
 menu()
@@ -473,6 +480,12 @@ while a:
                                      str(hero.money) + ' ' +
                                      ' '.join([str(i) for i in coll]))
                         pygame.quit()
+                        y = text.get_height() + 10
+                        n = 1480 // y
+                        mas = open('tabl_records.txt').readlines()
+                        mas.append(str(hero.money + f(hero.inor)))
+                        mas = sorted(mas, key=int)
+                        open('tabl_records.txt', 'w').write('\n'.join(mas[:n]))                        
                         while True:
                             pass
                 if pygame.mouse.get_pressed()[0]:
@@ -487,6 +500,12 @@ while a:
                                         str(hero.money) + ' ' +
                                         ' '.join([str(i) for i in coll]))
                         pygame.quit()
+                        y = text.get_height() + 10
+                        n = 1480 // y
+                        mas = open('tabl_records.txt').readlines()
+                        mas.append(str(hero.money + f(hero.inor)))
+                        mas = sorted(mas, key=int)
+                        open('tabl_records.txt', 'w').write('\n'.join(mas[:n]))
                         while True:
                             pass
             pygame.mixer.music.unpause()
@@ -574,3 +593,9 @@ while a:
     pygame.display.update()
     clock.tick(15)
 pygame.quit()
+y = text.get_height() + 10
+n = 1480 // y
+mas = open('tabl_records.txt').readlines()
+mas.append(str(hero.money + f(hero.inor)))
+mas = sorted(mas, key=int)
+open('tabl_records.txt', 'w').write('\n'.join(mas[:n]))
