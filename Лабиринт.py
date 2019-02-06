@@ -248,18 +248,49 @@ bombs.draw(screen)
 coll = []
 
 
+def records():
+    screen.fill((0, 0, 0))
+    tabl = open('tabl_records.txt').readlines()
+    font = pygame.font.Font(None, 68)
+    x = 0
+    for i in tabl:
+        text = font.render(i, 1, (255, 215, 0))
+        screen.blit(text, (x_0 + i * 50, y_0 + i * 50))
+        x_0 = 740 - text.get_width() / 2
+        y_0 = 450 - text.get_height() / 2 * len(tabl)
+        pygame.draw.rect(screen, (255, 0, 0), (x_0, y_0 + x * 60, 50, 50))
+        x += 1
+    pygame.display.flip()
+    pygame.display.update()
+    exit = load_image('exit.png')
+    while True:
+        screen.blit(pygame.transform.scale(exit, (500, 125)), (970, 10))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                while True:
+                    pass
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if y >= 10 and y <= 135 and x >= 970 and x <= 1470:
+                    return
+        pygame.display.flip()
+        pygame.display.update()
+
+
 def menu():
     global n, hero, coll
     screen.fill((0, 0, 0))
     start = load_image('start.png')
     exit = load_image('exit.png')
     cont = load_image('cont.png')
-    screen.blit(pygame.transform.scale(start, (500, 125)), (490, 200))
-    screen.blit(pygame.transform.scale(exit, (500, 125)), (490, 480))
-    screen.blit(pygame.transform.scale(cont, (500, 125)), (490, 335))
-    pygame.display.flip()
-    pygame.display.update()
+    tabl = load_image('tabl.png')
     while True:
+        screen.fill((0, 0, 0))
+        screen.blit(pygame.transform.scale(start, (500, 125)), (490, 200))
+        screen.blit(pygame.transform.scale(exit, (500, 125)), (490, 615))
+        screen.blit(pygame.transform.scale(cont, (500, 125)), (490, 335))
+        screen.blit(pygame.transform.scale(tabl, (500, 125)), (490, 480))        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -280,6 +311,14 @@ def menu():
                     except Exception:
                         continue
                 elif y >= 480 and y <= 605 and x >= 490 and x <= 990:
+                    print(1)
+                    records()
+                    print(2)
+                    pygame.display.flip()
+                    pygame.display.update()
+                    
+                    x, y = 0, 0
+                elif y >= 615 and y <= 740 and x >= 490 and x <= 990:
                     pygame.quit()
                     while True:
                         pass
