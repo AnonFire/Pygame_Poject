@@ -374,9 +374,9 @@ while a:
     screen.fill((70, 130, 180))
     crist.move(M_sp[n][0])
     screen.blit(bon, (800, 350))
-    for i in range(hero.life):
+    for i in range(min(hero.life, 10)):
         screen.blit(load_image("life.png"), (800 + i * 50, 90))
-    for i in range(1, hero.ignor + 1):
+    for i in range(1, min(hero.ignor, 7) + 1):
         screen.blit(load_image("armor" + str(i) + ".png"), (740 + i * 60, 150))
     j = 0
     for i in coll:
@@ -390,7 +390,7 @@ while a:
     text = font.render(str(int(hero.money)), 1, (255, 215, 0))
     screen.blit(c, (800 + text.get_width(), 280))
     text1 = font.render('Осталость ' + str(10 - coins_count % 10), 1,
-                        (255, 215, 0))
+                       (255, 215, 0))
     screen.blit(text1, (850 + text.get_width(), 280))
     screen.blit(c, (text1.get_width() + 850 + text.get_width(), 280))
     screen.blit(text, (800, 280))
@@ -417,6 +417,21 @@ while a:
     elif pygame.key.get_pressed()[pygame.K_RIGHT]:
         hero.move_x(1)
         hero.image = Hero.m[n][1]
+    give_god = (pygame.key.get_pressed()[pygame.K_1] and 
+                pygame.key.get_pressed()[pygame.K_5] and
+                pygame.key.get_pressed()[pygame.K_9])
+    if give_god:
+        hero.ignor = 10
+        print(hero.ignor)
+    give_healf = (pygame.key.get_pressed()[pygame.K_1] and 
+                pygame.key.get_pressed()[pygame.K_0])
+    if give_healf:
+        hero.life = 13
+    give_money = (pygame.key.get_pressed()[pygame.K_g] and
+                  pygame.key.get_pressed()[pygame.K_m])
+    if give_money:
+        hero.money = max(hero.money, 10**9)
+        coins_count += 10
     if pygame.mouse.get_pressed()[0]:
         x1, y1 = pygame.mouse.get_pos()
         if abs(x1 - 1365) <= 25 and abs(y1 - 35) <= 25:
