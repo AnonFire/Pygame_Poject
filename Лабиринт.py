@@ -422,7 +422,6 @@ while a:
                 pygame.key.get_pressed()[pygame.K_9])
     if give_god:
         hero.ignor = 10
-        print(hero.ignor)
     give_healf = (pygame.key.get_pressed()[pygame.K_1] and 
                 pygame.key.get_pressed()[pygame.K_0])
     if give_healf:
@@ -614,3 +613,6 @@ mas = open('tabl_records.txt').readlines()
 mas.append(str(hero.money + f(hero.inor)))
 mas = sorted(mas, key=int)
 open('tabl_records.txt', 'w').write('\n'.join(mas[:n]))
+open('save.txt', 'w').write(str(n) + ' ' + str(hero.bonus) + ' ' +
+                            str(hero.ignor) + ' ' + str(hero.money) + ' ' +
+                            ' '.join([str(i) for i in coll]))
