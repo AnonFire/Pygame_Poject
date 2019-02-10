@@ -246,6 +246,44 @@ steni.draw(screen)
 dorogi.draw(screen)
 bombs.draw(screen)
 coll = []
+clock = pygame.time.Clock()
+
+
+def start_screen():
+    intro_text = ["Правила игры",
+                  "1. Если ты потеряешь все жизни, то умрешь",
+                  "2. Если ты попадешь на клетку бомбы, то потерешь 1 жизнь",
+                  "3. Если ты дойдешь до кристалла, то ерейдёшь на следующий уровень",
+                  "4. кристалл с вопросом - переход на случайный уровень)",
+                  "5. Собирай монетки, на них ты можешь купить щит",
+                  "6. За каждые 10 монет ты можешь увидеть новую картинку)",
+                  "7. После прохождения 1 уровня, ты получаешь бонус",
+                  "8. Каждый щит дает тебе 10% шанс не потерять жизнь на бомбе",
+                  "9. Подсчет очков ведется по монеткам"]
+
+    fon = load_image('fon.jpg')
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('red'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                while True:
+                    pass
+            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        pygame.display.flip()
+        clock.tick(50)
 
 
 def records():
@@ -254,11 +292,10 @@ def records():
     font = pygame.font.Font(None, 68)
     j = 0
     for i in tabl:
-        text = font.render(i, 1, (255, 215, 0))
-        screen.blit(text, (x_0 + i * 50, y_0 + i * 50))
+        text = font.render(i.strip(), 1, (255, 215, 0))
         x_0 = 740 - text.get_width() / 2
         y_0 = 450 - (text.get_height() + 10) / 2 * len(tabl)
-        pygame.draw.rect(screen, (255, 0, 0), (x_0, y_0 + j * 60, 50, 50))
+        screen.blit(text, (int(x_0), int(y_0) + int(j) * 50))
         j += 1
     pygame.display.flip()
     pygame.display.update()
@@ -290,7 +327,7 @@ def menu():
         screen.blit(pygame.transform.scale(start, (500, 125)), (490, 200))
         screen.blit(pygame.transform.scale(exit, (500, 125)), (490, 615))
         screen.blit(pygame.transform.scale(cont, (500, 125)), (490, 335))
-        screen.blit(pygame.transform.scale(tabl, (500, 125)), (490, 480))        
+        screen.blit(pygame.transform.scale(tabl, (500, 125)), (490, 480))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -311,12 +348,9 @@ def menu():
                     except Exception:
                         continue
                 elif y >= 480 and y <= 605 and x >= 490 and x <= 990:
-                    print(1)
                     records()
-                    print(2)
                     pygame.display.flip()
                     pygame.display.update()
-                    
                     x, y = 0, 0
                 elif y >= 615 and y <= 740 and x >= 490 and x <= 990:
                     pygame.quit()
@@ -333,11 +367,11 @@ def f(n):
     return int(S)
 
 
+start_screen()
 menu()
 hero.image = Hero.m[n][0]
 crist.image = Crist.m[n]
 crist_rand.image = NotCrist.m[n]
-clock = pygame.time.Clock()
 pygame.mixer.music.load('fon.mp3')
 pygame.mixer.music.play(-1)
 boom = pygame.mixer.Sound('boom.wav')
@@ -387,10 +421,12 @@ while a:
     j = None
     screen.blit(lvl, (320, 0))
     font = pygame.font.Font(None, 68)
+    lvl_n = font.render(str(n), 1, (255, 0, 0))
+    screen.blit(lvl_n, (320, 0))
     text = font.render(str(int(hero.money)), 1, (255, 215, 0))
     screen.blit(c, (800 + text.get_width(), 280))
-    text1 = font.render('Осталость ' + str(10 - coins_count % 10), 1,
-                       (255, 215, 0))
+    text1 = font.render('Осталось ' + str(10 - coins_count % 10), 1,
+                        (255, 215, 0))
     screen.blit(text1, (850 + text.get_width(), 280))
     screen.blit(c, (text1.get_width() + 850 + text.get_width(), 280))
     screen.blit(text, (800, 280))
@@ -417,13 +453,13 @@ while a:
     elif pygame.key.get_pressed()[pygame.K_RIGHT]:
         hero.move_x(1)
         hero.image = Hero.m[n][1]
-    give_god = (pygame.key.get_pressed()[pygame.K_1] and 
+    give_god = (pygame.key.get_pressed()[pygame.K_1] and
                 pygame.key.get_pressed()[pygame.K_5] and
                 pygame.key.get_pressed()[pygame.K_9])
     if give_god:
         hero.ignor = 10
-    give_healf = (pygame.key.get_pressed()[pygame.K_1] and 
-                pygame.key.get_pressed()[pygame.K_0])
+    give_healf = (pygame.key.get_pressed()[pygame.K_1] and
+                  pygame.key.get_pressed()[pygame.K_0])
     if give_healf:
         hero.life = 13
     give_money = (pygame.key.get_pressed()[pygame.K_g] and
@@ -499,7 +535,7 @@ while a:
                         mas = open('tabl_records.txt').readlines()
                         mas.append(str(hero.money + f(hero.inor)))
                         mas = sorted(mas, key=int)
-                        open('tabl_records.txt', 'w').write('\n'.join(mas[:n]))                        
+                        open('tabl_records.txt', 'w').write('\n'.join(mas[:n]))
                         while True:
                             pass
                 if pygame.mouse.get_pressed()[0]:
